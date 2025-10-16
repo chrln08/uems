@@ -40,9 +40,9 @@
                             <li class="navbar-item"><a class="text-decoration-none text-black {% if request.get_full_path == '/' %}fw-bolder{% endif %}" href="/">Dashboard</a></li>
                             <li class="navbar-item mx-3"><a class="text-decoration-none text-black {% if request.get_full_path == '/events/' %}fw-bolder{% endif %}" href="/events">Events</a></li>
                             {% if request.user.is_superuser or request.user.is_staff %}
-                                <li class="navbar-item"><a class="text-decoration-none text-black" href="">Profiles</a></li>
+                                <li class="navbar-item"><a class="text-decoration-none text-black {% if request.get_full_path == '/profile/' %}fw-bolder{% endif %}" href="/profile">Profiles</a></li>
                             {% else %}
-                                <li class="navbar-item"><a class="text-decoration-none text-black" href="">Profile</a></li>
+                                <li class="navbar-item"><a class="text-decoration-none text-black {% if request.get_full_path == '/profile/' %}fw-bolder{% endif %}" href="/profile">Profile</a></li>
                             {% endif %}
                         </ul>
                     </section>
@@ -81,9 +81,9 @@
                         <li class="navbar-item mt-3"><a class="text-decoration-none text-black {% if request.get_full_path == '/' %}fw-bolder{% endif %}" href="/">Dashboard</a></li>
                         <li class="navbar-item mt-3"><a class="text-decoration-none text-black {% if request.get_full_path == '/events/' %}fw-bolder{% endif %}" href="/events">Events</a></li>
                         {% if request.user.is_superuser or request.user.is_staff %}
-                            <li class="navbar-item my-3"><a class="text-decoration-none text-black" href="">Profiles</a></li>
+                            <li class="navbar-item my-3"><a class="text-decoration-none text-black {% if request.get_full_path == '/profile/' %}fw-bolder{% endif %}" href="/profile">Profiles</a></li>
                         {% else %}
-                            <li class="navbar-item my-3"><a class="text-decoration-none text-black" href="">Profile</a></li>
+                            <li class="navbar-item my-3"><a class="text-decoration-none text-black {% if request.get_full_path == '/profile/' %}fw-bolder{% endif %}" href="/profile">Profile</a></li>
                         {% endif %}
                         <li>
                             <a class="btn btn-danger" href="/logout">

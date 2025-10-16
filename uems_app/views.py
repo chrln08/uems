@@ -53,9 +53,17 @@ def register_view(request):
 
     return render(request, "auth/register.html", {"form": form})
     
-def events(request):
+def events_view(request):
     if request.user.is_authenticated:
         return render(request, "events/index.html")
+    else:
+        error(request, "You are not logged in. Please log in first.")
+
+        return redirect("login")
+
+def profile_view(request):
+    if request.user.is_authenticated:
+        return render(request, "profile/index.html")
     else:
         error(request, "You are not logged in. Please log in first.")
 

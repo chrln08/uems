@@ -1,0 +1,88 @@
+{% extends "../master.html" %}
+
+{% block title %}
+    {% if request.user.is_superuser or request.user.is_staff %}
+        Profiles | UEMS
+    {% else %}
+        Profile | UEMS
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="uems-header">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="fw-bolder">
+                {% if request.user.is_superuser or request.user.is_staff %}
+                    Profiles
+                {% else %}
+                    Profile
+                {% endif %}
+            </h1>
+            <span>
+                {% if request.user.is_superuser or request.user.is_staff %}
+                    You can change profile information from this page and manage other users.
+                {% else %}
+                    You can view your profile information from this page.
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+<div class="uems-body">
+    <div class="row">
+        <div class="col-md-4">
+            <h1>Profile Details</h1>
+            <div class="card d-flex flex-column align-items-center justify-content-center shadow m-2 p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="142" height="142" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                </svg>
+                {% if request.user.first_name %}
+                    <h2>
+                        {{ request.user.first_name }} 
+                            {% if request.user.last_name %}
+                                {{ request.user.last_name }}
+                        {% endif %}
+                    </h2>
+                {% endif %}
+                <h4>
+                    <b>Username: </b>
+                    {{ request.user.username }}
+                </h4>
+                <h5>
+                    <b>Email: </b>
+                    {{ request.user.email }}
+                </h5>
+                <h5>
+                    <b>Role: </b>
+                    {% if request.user.is_superuser or request.user.is_staff %}
+                        Admin
+                    {% else %}
+                        User
+                    {% endif %}
+                </h5>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h1>Actions</h1>
+            <div class="d-flex flex-column align-items-center justify-content-center">
+                <section id="profile-actions">
+                    <a class="btn btn-secondary" href="">Change Email</a>
+                    <a class="btn btn-secondary" href="">Change Password</a>
+                </section>
+            </div>
+        </div>
+    </div>
+    {% if request.user.is_superadmin or request.user.is_staff %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Admin Panel</h1>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}
