@@ -1,0 +1,27 @@
+{% extends "../master.html" %}
+
+{% block title %}Events | UEMS{% endblock %}
+
+{% block content %}
+<div class="uems-header">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="fw-bolder">Events</h1>
+            <span>
+                {% if request.user.is_superuser or request.user.is_staff %}
+                    Here are all the events registed into the system. You may manage them here.
+                {% else %}
+                    Here are all the events in the university. You may view their details here.
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function(){
+    });
+</script>
+{% endblock %}

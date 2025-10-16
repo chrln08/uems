@@ -1,0 +1,115 @@
+.uems-floating-nav {
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+
+    align-items: center;
+
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    backdrop-filter: invert(30%) blur(3px);
+    border-radius: 5px;
+    padding: 0.5em;
+
+    z-index: 3;
+
+    transition: 0.3s top ease, 0.3s left ease, 0.3s right ease;
+}
+.nav-light {
+    color: black;
+    background: rgba(255, 255, 255, 0.5);
+}
+.nav-dark {
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+}
+#btn-navbar {
+    display: none;
+}
+#nav-controls {
+    display: block;
+}
+.uems-header {
+    background: linear-gradient(to right, rgba(0, 150, 57, 1), rgba(255, 215, 0, 1));
+
+    padding: 7em 1em 1em 1em;
+    align-items: baseline;
+
+    color: white;
+
+    box-shadow: 0 2px 5px 0 rgba(0, 150, 57, 0.75);
+}
+.uems-bg {
+    background: linear-gradient(to right, rgba(0, 150, 57, 1), rgba(255, 215, 0, 1));
+}
+.uems-body {
+    padding: 1em;
+
+    color: black;
+}
+.platform {
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    
+    border-radius: 7px;
+    height: 30em;
+    overflow: auto;
+
+    backdrop-filter: blur(3px);
+}
+
+.platform-light {
+    background: rgba(255, 255, 255, 0.75);
+    color: black;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(3px);
+
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+}
+.btn-nodecor {
+    background: transparent;
+    border: none;
+}
+@media only screen and (max-width: 767px){
+    .uems-floating-nav {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+
+        align-items: center;
+
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        backdrop-filter: invert(30%) blur(3px);
+        border-radius: 0px;
+        padding: 0.5em;
+
+        z-index: 3;
+
+        transition: 0.3s top ease, 0.3s left ease, 0.3s right ease;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    #btn-navbar {
+        display: block;
+    }
+
+    #nav-controls {
+        display: none !important;
+    }
+
+    .platform {
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        
+        border-radius: 7px;
+        height: 100vh;
+        overflow: auto;
+
+        backdrop-filter: blur(3px);
+    }
+}

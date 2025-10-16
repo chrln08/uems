@@ -1,0 +1,94 @@
+{% extends "master.html" %}
+
+{% block title %}Dashboard | UEMS{% endblock %}
+
+{% block content %}
+<div class="uems-header">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="fw-bolder">Welcome, 
+                {% if request.user.first_name %}
+                    {{ request.user.first_name }}
+                {% else %}
+                    {{ request.user.username }}
+                {% endif %}
+            </h1>
+            <span>Here is a summary of event information for the university.</span>
+        </div>
+    </div>
+</div>
+<div class="uems-body">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h3 class="fw-bolder">Total Events</h3>
+                </div>
+                <div class="card-body">
+                    <h3>Test</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h3 class="fw-bolder">Ongoing Events</h3>
+                </div>
+                <div class="card-body">
+                    <h3>Test</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h3 class="fw-bolder">Archived Events</h3>
+                </div>
+                <div class="card-body">
+                    <h3>Test</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h3 class="fw-bolder">Total Events</h3>
+                </div>
+                <div class="card-body">
+                    <h3>Test</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h3 class="fw-bolder">Ongoing Events</h3>
+                </div>
+                <div class="card-body">
+                    <h3>Test</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h3 class="fw-bolder">Archived Events</h3>
+                </div>
+                <div class="card-body">
+                    <h3>Test</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function(){
+
+    });
+</script>
+{% endblock %}

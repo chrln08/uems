@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Bootstrap 5 -->
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <!-- Header -->
+    {% if request.user.is_authenticated %}
+    <header class="d-flex align-items-center">
+        <div class="uems-floating-nav nav-light" id="navBar">
+            <div class="row">
+                <div class="col-md-4 d-flex align-items-center">
+                    <section class="d-flex align-items-center">
+                        <button class="btn-nodecor" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-mobile" aria-controls="navbar-mobile" aria-expanded="false" aria-label="Toggle navigation" id="btn-navbar">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                            </svg>
+                        </button>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-calendar2-week me-3" viewBox="0 0 16 16">
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+                            <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
+                        <h2 class="fw-bolder">UEMS</h2>
+                    </section>
+                    <section class="nav ms-3">
+                        <ul class="navbar-nav d-flex flex-row">
+                            <li class="navbar-item"><a class="text-decoration-none text-black {% if request.get_full_path == '/' %}fw-bolder{% endif %}" href="/">Dashboard</a></li>
+                            <li class="navbar-item mx-3"><a class="text-decoration-none text-black {% if request.get_full_path == '/events/' %}fw-bolder{% endif %}" href="/events">Events</a></li>
+                            {% if request.user.is_superuser or request.user.is_staff %}
+                                <li class="navbar-item"><a class="text-decoration-none text-black" href="">Profiles</a></li>
+                            {% else %}
+                                <li class="navbar-item"><a class="text-decoration-none text-black" href="">Profile</a></li>
+                            {% endif %}
+                        </ul>
+                    </section>
+                </div>
+                <div class="col-md-8 d-flex align-items-center justify-content-end" id="nav-controls">
+                    <section class="d-flex flex-column text-end me-2">
+                        <span><b>Signed in as: </b>
+                            {% if request.user.first_name %}
+                                {{ request.user.first_name }} 
+                                {% if request.user.last_name %}
+                                    {{ request.user.last_name }}
+                                {% endif %}
+                            {% else %}
+                                {{ request.user.username }}
+                            {% endif %}
+                        </span>
+                        <span>
+                            {% if request.user.is_superuser or request.user.is_staff %}
+                                Admin
+                            {% else %}
+                                User
+                            {% endif %}
+                        </span>
+                    </section>
+                    <a class="btn btn-danger" href="/logout">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-mobile">
+                <section class="ms-3">
+                    <ul class="navbar-nav d-flex flex-column">
+                        <li class="navbar-item mt-3"><a class="text-decoration-none text-black {% if request.get_full_path == '/' %}fw-bolder{% endif %}" href="/">Dashboard</a></li>
+                        <li class="navbar-item mt-3"><a class="text-decoration-none text-black {% if request.get_full_path == '/events/' %}fw-bolder{% endif %}" href="/events">Events</a></li>
+                        {% if request.user.is_superuser or request.user.is_staff %}
+                            <li class="navbar-item my-3"><a class="text-decoration-none text-black" href="">Profiles</a></li>
+                        {% else %}
+                            <li class="navbar-item my-3"><a class="text-decoration-none text-black" href="">Profile</a></li>
+                        {% endif %}
+                        <li>
+                            <a class="btn btn-danger" href="/logout">
+                                Logout
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </header>
+    {% endif %}
+
+    <!-- Main Content -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- jQuery 3.7.1 JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- SweetAlert2 11.26.2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Custom Script -->
+    {% block script %}
+    <script>
+        $(document).ready(function(){
+            $("#navBar").scroll(function(){
+                $(".uems-floating-nav").add("light");
+            });
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>
