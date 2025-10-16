@@ -10,6 +10,8 @@
     {% load bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
+    <!-- DataTables 2.3.4 CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
@@ -18,7 +20,7 @@
     <!-- Header -->
     {% if request.user.is_authenticated %}
     <header class="d-flex align-items-center">
-        <div class="uems-floating-nav nav-light" id="navBar">
+        <div class="uems-floating-nav nav-light">
             <div class="row">
                 <div class="col-md-4 d-flex align-items-center">
                     <section class="d-flex align-items-center">
@@ -107,6 +109,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- SweetAlert2 11.26.2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- DataTables 2.3.4 JS -->
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
     <!-- Custom Script -->
     {% block script %}
     <script>

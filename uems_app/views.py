@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.messages import error, info
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import login, logout, authenticate
 from .forms import RegisterForm, LoginForm
 
