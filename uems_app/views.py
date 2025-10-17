@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.messages import error, info
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import login, logout, authenticate
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, NewEventForm
 
 # Create your views here.
 def main(request):
@@ -56,6 +56,17 @@ def register_view(request):
 def events_view(request):
     if request.user.is_authenticated:
         return render(request, "events/index.html")
+    else:
+        error(request, "You are not logged in. Please log in first.")
+
+        return redirect("login")
+    
+def new_event_view(request):
+    if request.user.is_authenticated:
+        # todo - GET and POST data; if POST save if GET, get event data; rename function
+        form = NewEventForm()
+        
+        return render(request, "events/create.html", {"form": form})
     else:
         error(request, "You are not logged in. Please log in first.")
 
