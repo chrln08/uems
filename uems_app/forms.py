@@ -19,6 +19,7 @@ class LoginForm(AuthenticationForm):
 class NewEventForm(forms.Form):
     name = forms.CharField(max_length=255, required=True)
     description = forms.CharField(max_length=1024, required=True)
+    thumbnail = forms.FileField(required=True)
     location = forms.CharField(max_length=255, required=True)
     archived = forms.BooleanField(required=False)
     from_date = forms.DateTimeField()
@@ -26,4 +27,9 @@ class NewEventForm(forms.Form):
 
     class Meta:
         model = Event
-        fields = ["name", "description", "location", "archived", "from_date", "to_date"]
+        fields = ["name", "description", "thumbnail", "location", "archived", "from_date", "to_date"]
+
+class ChangePasswordForm(PasswordChangeForm):
+    class Meta:
+        model = User
+        fields = ["old_password", "new_password1", "new_password2"]

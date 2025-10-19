@@ -5,7 +5,7 @@
 {% block content %}
 <div class="uems-header">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
             <h1 class="fw-bolder">Events</h1>
             <span>
                 {% if request.user.is_superuser or request.user.is_staff %}
@@ -15,12 +15,19 @@
                 {% endif %}
             </span>
         </div>
+        <div class="col-md-4 d-flex align-items-end justify-content-end">
+            <section class="uems-search">
+                <label for="events">Search</label>
+                <input class="form-control" type="search" name="events" id="events" placeholder="Search for events">
+            </section>
+        </div>
     </div>
 </div>
 <div class="uems-body">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" id="eventsList">
             <!-- events -->
+            <span class="text-center">No events.</span>
         </div>
     </div>
 </div>

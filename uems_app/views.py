@@ -74,7 +74,21 @@ def new_event_view(request):
 
 def profile_view(request):
     if request.user.is_authenticated:
-        return render(request, "profile/index.html")
+        if request.method == 'POST':
+            form = PasswordChangeForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                info(request, "Your password has been changed successfully.")
+
+                return redirect("profile")
+            else:
+                error(request, "Failed to change password. Please ensure that you have followed each step correctly and retry again.")
+
+                return redirect("profile")
+
+        pwChange = PasswordChangeForm(request.user)
+
+        return render(request, "profile/index.html", {"password_form": pwChange})
     else:
         error(request, "You are not logged in. Please log in first.")
 

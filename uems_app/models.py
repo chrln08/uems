@@ -4,6 +4,7 @@ from django.db import models
 class Event(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=1024)
+    thumbnail = models.FileField(upload_to='event_thumbnails/')
     location = models.CharField(max_length=255) # temporary
     archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
