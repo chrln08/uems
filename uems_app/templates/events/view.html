@@ -1,0 +1,32 @@
+{% extends "../master.html" %}
+{% block title %}{{ event.title }} | UEMS{% endblock %}
+
+{% block content %}
+<div class="uems-header">
+    <h1 class="fw-bolder">{{ event.title }}</h1>
+    <p class="text-muted">{{ event.overview }}</p>
+</div>
+
+<div class="uems-body">
+    <div class="card p-4 shadow-sm">
+        <h5><strong>Venue:</strong> {{ event.venue }}</h5>
+        <h5><strong>Organizer:</strong> {{ event.organizer }}</h5>
+        <h5><strong>Schedule:</strong> {{ event.start_datetime|date:"M d, Y H:i" }} — {{ event.end_datetime|date:"M d, Y H:i" }}</h5>
+        <h5><strong>Max Attendees:</strong> {{ event.max_attendees }}</h5>
+        <h5><strong>Visibility:</strong> {% if event.is_public %} Public {% else %} Private {% endif %}</h5>
+        <hr>
+        <p>{{ event.description }}</p>
+
+        <div class="mt-4">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'event_register' event.pk %}" class="btn btn-success">Register</a>
+            {% endif %}
+
+            {% if request.user.is_staff or request.user.is_superuser %}
+                <a href="{% url 'event_edit' event.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'event_delete' event.pk %}" class="btn btn-danger">Delete</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
