@@ -4,31 +4,35 @@
 {% block title %}Login | UEMS{% endblock %}
 
 {% block content %}
-<div class="container-xxl p-2 uems-bg vh-100 d-flex flex-column align-items-center justify-content-center">
+<div class="container-fluid p-2 uems-bg vh-100 d-flex flex-column align-items-center justify-content-center">
     <div class="platform platform-light">
         <div class="card-header d-flex align-items-center justify-content-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
-                <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z"/>
-                <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-calendar3"
+                viewBox="0 0 16 16">
+                <path
+                    d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z" />
+                <path
+                    d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
             </svg>
             <h1 class="fw-bolder ms-2">University Events Management System</h1>
         </div>
         <div class="card-body">
             {% if messages %}
-                {% for message in messages %}
-                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                        <div class="alert alert-danger" role="alert">
-                            <span>{{ message }}</span>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-success" role="alert">
-                            <span>{{ message }}</span>
-                        </div>
-                    {% endif %}
-                {% endfor %}
+            {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="alert alert-danger" role="alert">
+                <span>{{ message }}</span>
+            </div>
+            {% else %}
+            <div class="alert alert-success" role="alert">
+                <span>{{ message }}</span>
+            </div>
+            {% endif %}
+            {% endfor %}
             {% endif %}
             <h1 class="fw-bolder">Register</h1>
-            <span>Please fill out the form with the correct information. Fields marked with an asterisk (*) are <b>required</b>.</span>
+            <span>Please fill out the form with the correct information. Fields marked with an asterisk (*) are
+                <b>required</b>.</span>
             <form method="POST">
                 {% csrf_token %}
                 {{form|crispy}}
@@ -43,7 +47,7 @@
 
 {% block script %}
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
 
     });
 </script>
