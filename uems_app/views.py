@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.messages import error, info
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login, logout, authenticate
 from .forms import RegisterForm, LoginForm, NewEventForm
 
@@ -39,7 +40,10 @@ def logout_view(request):
 
 def register_view(request):
     if request.method == "POST":
-        if User.objects.get(email=request.POST.get("email")) is None:
+        try:
+            user = User.objects.get(email=request.POST.get("email"))
+            error(request, "Failed to register. This email has already been registered in the system. Please try again.")
+        except ObjectDoesNotExist as dne:
             form = RegisterForm(request.POST)
             if form.is_valid():
                 user = form.save()
@@ -48,8 +52,7 @@ def register_view(request):
                 return redirect("main")
             else:
                 error(request, "Failed to register. Please ensure that you have meet the criteria in each field.")
-        else:
-            error(request, "Failed to register. This email has already been registered in the system. Please try again.")
+
     elif request.user.is_authenticated:
         return redirect("main")
     
@@ -105,14 +108,21 @@ def profile_view(request):
                     return redirect("profile")
             else:
                 if request.POST.get("old_email") == request.user.email:
-                    user = User.objects.get(email=request.user.email)
-                    user.email = request.POST.get("new_email")
-                    user.save()
-                    request.user.email = request.POST.get("new_email")
+                        try:
+                            user = User.objects.get(email=request.POST.get("new_email"))
 
-                    info(request, "Your email has been changed successfully.")
+                            error(request, "Error saving new email. The new email is already in use.")
 
-                    return redirect("profile")
+                            return redirect("profile")
+                        except ObjectDoesNotExist as dne:
+                            user = User.objects.get(email=request.user.email)
+                            user.email = request.POST.get("new_email")
+                            user.save()
+                            request.user.email = request.POST.get("new_email")
+
+                            info(request, "Your email has been changed successfully.")
+
+                            return redirect("profile")
                 else:
                     error(request, "Email mismatch. Please try again.")
 
