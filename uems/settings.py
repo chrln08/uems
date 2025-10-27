@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     'uems_app',
     'bootstrap5',
     'crispy_forms',
-    'crispy_bootstrap5',
-    'bootstrap_datepicker_plus'
+    'crispy_bootstrap5'
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
