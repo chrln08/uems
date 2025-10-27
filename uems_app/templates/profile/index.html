@@ -2,11 +2,11 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    {% if request.user.is_superuser or request.user.is_staff %}
-        Profiles | UEMS
-    {% else %}
-        Profile | UEMS
-    {% endif %}
+{% if request.user.is_superuser or request.user.is_staff %}
+Profiles | UEMS
+{% else %}
+Profile | UEMS
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -15,16 +15,16 @@
         <div class="col-md-12">
             <h1 class="fw-bolder">
                 {% if request.user.is_superuser or request.user.is_staff %}
-                    Profiles
+                Profiles
                 {% else %}
-                    Profile
+                Profile
                 {% endif %}
             </h1>
             <span>
                 {% if request.user.is_superuser or request.user.is_staff %}
-                    You can change profile information from this page and manage other users.
+                You can change profile information from this page and manage other users.
                 {% else %}
-                    You can view your profile information from this page.
+                You can view your profile information from this page.
                 {% endif %}
             </span>
         </div>
@@ -35,17 +35,19 @@
         <div class="col-md-4">
             <h1>Profile Details</h1>
             <div class="card d-flex flex-column align-items-center justify-content-center shadow m-2 p-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="142" height="142" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="142" height="142" fill="currentColor"
+                    class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                    <path fill-rule="evenodd"
+                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                 </svg>
                 {% if request.user.first_name %}
-                    <h2>
-                        {{ request.user.first_name }} 
-                            {% if request.user.last_name %}
-                                {{ request.user.last_name }}
-                        {% endif %}
-                    </h2>
+                <h2>
+                    {{ request.user.first_name }}
+                    {% if request.user.last_name %}
+                    {{ request.user.last_name }}
+                    {% endif %}
+                </h2>
                 {% endif %}
                 <h4>
                     <b>Username: </b>
@@ -58,9 +60,9 @@
                 <h5>
                     <b>Role: </b>
                     {% if request.user.is_superuser or request.user.is_staff %}
-                        Admin
+                    Admin
                     {% else %}
-                        User
+                    User
                     {% endif %}
                 </h5>
             </div>
@@ -69,21 +71,23 @@
             <h1>Actions</h1>
             <div class="d-flex flex-column align-items-center justify-content-center">
                 {% if messages %}
-                    {% for message in messages %}
-                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                            <div class="alert alert-danger" role="alert">
-                                <span>{{ message }}</span>
-                            </div>
-                        {% else %}
-                            <div class="alert alert-dark" role="alert">
-                                <span>{{ message }}</span>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                {% for message in messages %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                <div class="alert alert-danger" role="alert">
+                    <span>{{ message }}</span>
+                </div>
+                {% else %}
+                <div class="alert alert-dark" role="alert">
+                    <span>{{ message }}</span>
+                </div>
+                {% endif %}
+                {% endfor %}
                 {% endif %}
                 <section id="profile-actions">
-                    <a class="btn btn-secondary" href="">Change Email</a>
-                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#passwordChange" type="button">Change Password</button>
+                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#emailChange"
+                        type="button">Change Email</button>
+                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#passwordChange"
+                        type="button">Change Password</button>
                 </section>
             </div>
         </div>
@@ -110,6 +114,29 @@
                     {% csrf_token %}
                     {{ password_form|crispy }}
                     <button class="btn btn-success" type="submit">Change Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="emailChange" tabindex="-1" aria-labelledby="emailChangeModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <h3 class="fw-bolder">Change Email</h3>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <span>Please fill the form below to change your email address accordingly.</span>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <label for="old_email">Old Email*</label>
+                    <input class="form-control" type="email" name="old_email" id="old_email" required>
+                    <label for="new_email">New Email*</label>
+                    <input class="form-control" type="email" name="new_email" id="new_email" required>
+
+                    <button class="btn btn-success mt-2" type="submit">Change Email</button>
                 </form>
             </div>
         </div>

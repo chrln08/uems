@@ -9,9 +9,9 @@
             <h1 class="fw-bolder">Events</h1>
             <span>
                 {% if request.user.is_superuser or request.user.is_staff %}
-                    Here are all the events registed into the system. You may manage them here.
+                Here are all the events registed into the system. You may manage them here.
                 {% else %}
-                    Here are all the events in the university. You may view their details here.
+                Here are all the events in the university. You may view their details here.
                 {% endif %}
             </span>
         </div>
@@ -27,6 +27,19 @@
     <div class="row">
         <div class="col-md-12" id="eventsList">
             <!-- events -->
+            {% if messages %}
+            {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="alert alert-danger" role="alert">
+                <span>{{ message }}</span>
+            </div>
+            {% else %}
+            <div class="alert alert-dark" role="alert">
+                <span>{{ message }}</span>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
             <span class="text-center">No events.</span>
         </div>
     </div>
@@ -34,8 +47,4 @@
 {% endblock %}
 
 {% block script %}
-<script>
-    $(document).ready(function(){
-    });
-</script>
 {% endblock %}

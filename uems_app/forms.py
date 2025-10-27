@@ -1,10 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
+from bootstrap_datepicker_plus.widgets import DatePickerInput, DateTimePickerInput
 from .models import Event
+from datetime import datetime
 
 class RegisterForm(UserCreationForm):
-    first_name = forms.TextInput(attrs={"required": True})
+    first_name = forms.TextInput()
     email = forms.EmailField(required=True)
 
     class Meta:
@@ -18,16 +20,36 @@ class LoginForm(AuthenticationForm):
 
 class NewEventForm(forms.Form):
     name = forms.CharField(max_length=255, required=True)
-    description = forms.CharField(max_length=1024, required=True)
-    thumbnail = forms.FileField(required=True)
+    description = forms.CharField(max_length=1024, required=True, widget=forms.Textarea)
     location = forms.CharField(max_length=255, required=True)
-    archived = forms.BooleanField(required=False)
-    from_date = forms.DateTimeField()
-    to_date = forms.DateTimeField()
+    from_date = forms.DateField(
+        widget=DateTimePickerInput(
+            options={
+                "format": "MM-DD-YYYY hh:mm A",
+                "showClose": True,
+                "showClear": True,
+                "showTodayButton": True,
+                "minDate": datetime.today().strftime('%Y-%m-%d 00:00:00'),
+            }
+        ),
+        label="From:"
+    )
+    to_date = forms.DateField(
+        widget=DateTimePickerInput(
+            options={
+                "format": "MM-DD-YYYY hh:mm A",
+                "showClose": True,
+                "showClear": True,
+                "showTodayButton": True,
+                "minDate": datetime.today().strftime('%Y-%m-%d 00:00:00'),
+            }
+        ),
+        label="To:"
+    )
 
     class Meta:
         model = Event
-        fields = ["name", "description", "thumbnail", "location", "archived", "from_date", "to_date"]
+        fields = ["name", "description", "thumbnail", "location", "from_date", "to_date"]
 
 class ChangePasswordForm(PasswordChangeForm):
     class Meta:

@@ -17,10 +17,26 @@
 <div class="uems-body">
     <div class="row">
         <div class="col-md-12">
-            <!-- form detail -->
-            <form method="POST">
+             {% if messages %}
+                {% for message in messages %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                        <script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: '{{ message }}',
+                                customClass: {
+                                    popup: 'glass'
+                                }
+                            });
+                        </script>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{form|crispy}}
+                {{form.media}}
                 <button class="btn btn-success" type="submit">Add New Event</button>
             </form>
         </div>

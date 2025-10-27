@@ -40,10 +40,14 @@ INSTALLED_APPS = [
     'uems_app',
     'bootstrap5',
     'crispy_forms',
-    'crispy_bootstrap5'
+    'crispy_bootstrap5',
+    'bootstrap_datepicker_plus'
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+MEDIA_ROOT = BASE_DIR / 'mediafiles'
+MEDIA_URL = '/media/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
