@@ -9,11 +9,11 @@
 
 <div class="uems-body">
     <div class="card p-4 shadow-sm">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
-            <a href="{% url 'event_detail' event.pk %}" class="btn btn-secondary mt-3">Cancel</a>
+            <a href="{% url 'event_detail' event.id %}" class="btn btn-secondary mt-3">Cancel</a>
         </form>
     </div>
 </div>

@@ -9,6 +9,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from .forms import RegisterForm, LoginForm, EventForm, AttendeeForm
 from .models import Event, Attendee
+from django.utils import timezone
 
 # Create your views here.
 def main(request):
@@ -90,6 +91,34 @@ def profile_view(request):
     pwChange = PasswordChangeForm(request.user)
     return render(request, "profile/index.html", {"password_form": pwChange})
 
+def dashboard_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    now = timezone.now().date()
+
+    if request.user.is_superuser or request.user.is_staff:
+        total_events = Event.objects.count()
+        ongoing_events = Event.objects.filter(from_date__lte=now, to_date__gte=now, archived=False).count()
+        archived_events = Event.objects.filter(archived=True).count()
+
+        context = {
+            'total_events': total_events,
+            'ongoing_events': ongoing_events,
+            'archived_events': archived_events,
+        }
+        return render(request, 'dashboard/dash_admin.html', context)
+
+    else:
+        upcoming_events = Event.objects.filter(
+            start_datetime__gte=timezone.now()
+        ).order_by('start_datetime')[:6]
+
+        context = {
+            'upcoming_events': upcoming_events,
+        }
+        return render(request, 'dashboard/dash_user.html', context)
+
 class EventListView(ListView):
     model = Event
     template_name = 'events/index.html'
@@ -121,31 +150,19 @@ class EventCreateView(CreateView):
     model = Event
     form_class = EventForm
     template_name = 'events/create.html'
-    success_url = reverse_lazy('events_list')
+    success_url = reverse_lazy('event_list')
 
-def new_event_view(request):
-    if not request.user.is_authenticated:
-        messages.error(request, "You are not logged in. Please log in first.")
-        return redirect("login")
-
-    if request.method == "POST":
-        form = EventForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.info(request, "New event has been created successfully.")
-            return redirect("events")
-        else:
-            messages.error(request, "Failed to create event. Please check your inputs.")
-    else:
-        form = EventForm()
-
-    return render(request, "events/create.html", {"form": form})
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            messages.error(request, "You are not authorized to create events.")
+            return redirect('event_list')
+        return super().dispatch(request, *args, **kwargs)
 
 class EventUpdateView(UpdateView):
     model = Event
     form_class = EventForm
     template_name = 'events/update.html'
-    success_url = reverse_lazy('events_list')
+    success_url = reverse_lazy('index')
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_staff:
