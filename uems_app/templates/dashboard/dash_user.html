@@ -2,10 +2,24 @@
 {% block title %}My Dashboard | UEMS{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="fw-bold mb-3">Welcome, {{ request.user.username }}!</h1>
-    <h4 class="text-muted">Upcoming Events</h4>
-
+<div class="uems-header">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="fw-bolder">
+                Welcome, {{ request.user.username }}!
+            </h1>
+            <span>
+                Here is your dashboard.
+            </span>
+        </div>
+    </div>
+</div>
+<div class="uems-body">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="fw-bolder">Upcoming Events</h3>
+        </div>
+    </div>
     <div class="row">
         {% for event in upcoming_events %}
         <div class="col-md-4 mb-3">

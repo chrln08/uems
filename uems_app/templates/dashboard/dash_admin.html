@@ -2,9 +2,24 @@
 {% block title %}Admin Dashboard | UEMS{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="fw-bold mb-3">Admin Dashboard</h1>
-
+<div class="uems-header">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="fw-bolder">
+                Welcome, {{ request.user.username }}!
+            </h1>
+            <span>
+                Here is a summary of event information.
+            </span>
+        </div>
+    </div>
+</div>
+<div class="uems-body">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="fw-bolder">Admin Dashboard</h3>
+        </div>
+    </div>
     <div class="row text-center mb-4">
         <div class="col-md-4">
             <div class="card bg-light p-3">

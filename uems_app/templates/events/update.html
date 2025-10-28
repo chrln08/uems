@@ -1,5 +1,6 @@
 {% extends "../master.html" %}
 {% block title %}Edit Event | UEMS{% endblock %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="uems-header">
@@ -11,7 +12,7 @@
     <div class="card p-4 shadow-sm">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form|crispy }}
             <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
             <a href="{% url 'event_detail' event.id %}" class="btn btn-secondary mt-3">Cancel</a>
         </form>

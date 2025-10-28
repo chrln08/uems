@@ -12,7 +12,7 @@ from .models import Event, Attendee
 from django.utils import timezone
 
 # Create your views here.
-def main(request):
+def dashboard(request):
     if request.user.is_authenticated:
         return render(request, "index.html")
     else:
@@ -24,11 +24,11 @@ def login_view(request):
         user = authenticate(username=request.POST["username"], password=request.POST["password"])
         if user is not None:
             login(request, user)
-            return redirect("main")
+            return redirect("dashboard")
         else:
             messages.error(request, "Username or password is incorrect. Please try again.")
     elif request.user.is_authenticated:
-        return redirect("main")
+        return redirect("dashboard")
 
     form = LoginForm()
     return render(request, "auth/login.html", {"form": form})
@@ -49,11 +49,11 @@ def register_view(request):
             if form.is_valid():
                 user = form.save()
                 login(request, user)
-                return redirect("main")
+                return redirect("dashboard")
             else:
                 messages.error(request, "Failed to register. Please check each field carefully.")
     elif request.user.is_authenticated:
-        return redirect("main")
+        return redirect("dashboard")
 
     form = RegisterForm()
     return render(request, "auth/register.html", {"form": form})
@@ -111,8 +111,8 @@ def dashboard_view(request):
 
     else:
         upcoming_events = Event.objects.filter(
-            start_datetime__gte=timezone.now()
-        ).order_by('start_datetime')[:6]
+            from_date__gte=timezone.now()
+        ).order_by('from_date')[:6]
 
         context = {
             'upcoming_events': upcoming_events,
@@ -173,10 +173,10 @@ class EventUpdateView(UpdateView):
 class EventDeleteView(DeleteView):
     model = Event
     template_name = 'events/delete.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('event_list')
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_staff:
             messages.error(request, "You are not authorized to delete events.")
-            return redirect('index')
+            return redirect('event_list')
         return super().dispatch(request, *args, **kwargs)
