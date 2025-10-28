@@ -1,45 +1,20 @@
 {% extends "../master.html" %}
-{% load crispy_forms_tags %}
-
-{% block title %}
-    Add New Event | UEMS
-{% endblock %}
+{% block title %}Create Event | UEMS{% endblock %}
 
 {% block content %}
 <div class="uems-header">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="fw-bolder">New Event</h1>
-            <span>You may add a new event from this page. Please fill the form accurately.</span>
-        </div>
-    </div>
+    <h1 class="fw-bolder">Create New Event</h1>
+    <p class="text-muted">Fill in the form below to add a new event.</p>
 </div>
+
 <div class="uems-body">
-    <div class="row">
-        <div class="col-md-12">
-             {% if messages %}
-                {% for message in messages %}
-                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                        <script>
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: '{{ message }}',
-                                customClass: {
-                                    popup: 'glass'
-                                }
-                            });
-                        </script>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{form|crispy}}
-                {{form.media}}
-                <button class="btn btn-success" type="submit">Add New Event</button>
-            </form>
-        </div>
+    <div class="card p-4 shadow-sm">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary mt-3">Create Event</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">Cancel</a>
+        </form>
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends "../master.html" %}
+{% block title %}My Dashboard | UEMS{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="fw-bold mb-3">Welcome, {{ request.user.username }}!</h1>
+    <h4 class="text-muted">Upcoming Events</h4>
+
+    <div class="row">
+        {% for event in upcoming_events %}
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.title }}</h5>
+                    <p>{{ event.description|truncatechars:100 }}</p>
+                    <small class="text-muted">{{ event.start_datetime|date:"M d, Y H:i" }}</small>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'event_detail' event.id %}" class="btn btn-primary btn-sm">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted">No upcoming events at the moment.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

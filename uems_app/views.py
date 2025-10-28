@@ -1,18 +1,22 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.contrib.messages import error, info
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login, logout, authenticate
-from .forms import RegisterForm, LoginForm, NewEventForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from .forms import RegisterForm, LoginForm, EventForm, AttendeeForm
+from .models import Event, Attendee
+from django.utils import timezone
 
 # Create your views here.
 def main(request):
     if request.user.is_authenticated:
         return render(request, "index.html")
     else:
-        error(request, "You are not logged in. Please log in first.")
+        messages.error(request, "You are not logged in. Please log in first.")
         return redirect("login")
 
 def login_view(request):
@@ -20,119 +24,159 @@ def login_view(request):
         user = authenticate(username=request.POST["username"], password=request.POST["password"])
         if user is not None:
             login(request, user)
-
             return redirect("main")
         else:
-            error(request, "Username or password is incorrect. Please try again.")
+            messages.error(request, "Username or password is incorrect. Please try again.")
     elif request.user.is_authenticated:
         return redirect("main")
-    
-    form = LoginForm()
 
+    form = LoginForm()
     return render(request, "auth/login.html", {"form": form})
 
 def logout_view(request):
     if request.user.is_authenticated:
         logout(request)
-        info(request, "You have been logged out.")
-    
+        messages.info(request, "You have been logged out.")
     return redirect("login")
 
 def register_view(request):
     if request.method == "POST":
         try:
             user = User.objects.get(email=request.POST.get("email"))
-            error(request, "Failed to register. This email has already been registered in the system. Please try again.")
-        except ObjectDoesNotExist as dne:
+            messages.error(request, "This email has already been registered.")
+        except ObjectDoesNotExist:
             form = RegisterForm(request.POST)
             if form.is_valid():
                 user = form.save()
                 login(request, user)
-
                 return redirect("main")
             else:
-                error(request, "Failed to register. Please ensure that you have meet the criteria in each field.")
-
+                messages.error(request, "Failed to register. Please check each field carefully.")
     elif request.user.is_authenticated:
         return redirect("main")
-    
+
     form = RegisterForm()
-
     return render(request, "auth/register.html", {"form": form})
-    
-def events_view(request):
-    if request.user.is_authenticated:
-        return render(request, "events/index.html")
-    else:
-        error(request, "You are not logged in. Please log in first.")
-
-        return redirect("login")
-    
-def new_event_view(request):
-    if request.user.is_authenticated:
-        # todo - GET and POST data; if POST save if GET, get event data; rename function
-        if request.method == "POST":
-            form = NewEventForm(request.POST)
-            if form.is_valid():
-                form.save()
-
-                info(request, "New event has been created successfully.")
-
-                return redirect("events")
-            else:
-                error(request, "Failed to create new event. Please ensure that you have filled the details correctly.")
-
-                return redirect("new_event")
-            
-        form = NewEventForm()
-        
-        return render(request, "events/create.html", {"form": form})
-    else:
-        error(request, "You are not logged in. Please log in first.")
-
-        return redirect("login")
 
 def profile_view(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            if request.POST.get("old_email") is None:
-                form = PasswordChangeForm(request.user, request.POST)
-                if form.is_valid():
-                    user = form.save()
-                    info(request, "Your password has been changed successfully. Please log in again.")
-
-                    return redirect("login")
-                else:
-                    error(request, "Failed to change password. Please ensure that you have followed each step correctly and retry again.")
-
-                    return redirect("profile")
-            else:
-                if request.POST.get("old_email") == request.user.email:
-                        try:
-                            user = User.objects.get(email=request.POST.get("new_email"))
-
-                            error(request, "Error saving new email. The new email is already in use.")
-
-                            return redirect("profile")
-                        except ObjectDoesNotExist as dne:
-                            user = User.objects.get(email=request.user.email)
-                            user.email = request.POST.get("new_email")
-                            user.save()
-                            request.user.email = request.POST.get("new_email")
-
-                            info(request, "Your email has been changed successfully.")
-
-                            return redirect("profile")
-                else:
-                    error(request, "Email mismatch. Please try again.")
-
-                    return redirect("profile")
-
-
-        pwChange = PasswordChangeForm(request.user)
-
-        return render(request, "profile/index.html", {"password_form": pwChange})
-    else:
-        error(request, "You are not logged in. Please log in first.")
-
+    if not request.user.is_authenticated:
+        messages.error(request, "You are not logged in. Please log in first.")
         return redirect("login")
+
+    if request.method == 'POST':
+        if request.POST.get("old_email") is None:
+            form = PasswordChangeForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                messages.info(request, "Your password has been changed successfully. Please log in again.")
+                return redirect("login")
+            else:
+                messages.error(request, "Failed to change password. Please ensure all fields are correct.")
+        else:
+            # Email change logic
+            if request.POST.get("old_email") == request.user.email:
+                try:
+                    User.objects.get(email=request.POST.get("new_email"))
+                    messages.error(request, "Error saving new email. The new email is already in use.")
+                except ObjectDoesNotExist:
+                    user = User.objects.get(email=request.user.email)
+                    user.email = request.POST.get("new_email")
+                    user.save()
+                    messages.info(request, "Your email has been changed successfully.")
+            else:
+                messages.error(request, "Email mismatch. Please try again.")
+
+        return redirect("profile")
+
+    pwChange = PasswordChangeForm(request.user)
+    return render(request, "profile/index.html", {"password_form": pwChange})
+
+def dashboard_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    now = timezone.now().date()
+
+    if request.user.is_superuser or request.user.is_staff:
+        total_events = Event.objects.count()
+        ongoing_events = Event.objects.filter(from_date__lte=now, to_date__gte=now, archived=False).count()
+        archived_events = Event.objects.filter(archived=True).count()
+
+        context = {
+            'total_events': total_events,
+            'ongoing_events': ongoing_events,
+            'archived_events': archived_events,
+        }
+        return render(request, 'dashboard/dash_admin.html', context)
+
+    else:
+        upcoming_events = Event.objects.filter(
+            start_datetime__gte=timezone.now()
+        ).order_by('start_datetime')[:6]
+
+        context = {
+            'upcoming_events': upcoming_events,
+        }
+        return render(request, 'dashboard/dash_user.html', context)
+
+class EventListView(ListView):
+    model = Event
+    template_name = 'events/index.html'
+    context_object_name = 'events'
+    paginate_by = 12
+
+class EventDetailView(DetailView):
+    model = Event
+    template_name = 'events/view.html'
+    context_object_name = 'event'
+
+def register_for_event(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    if request.method == 'POST':
+        form = AttendeeForm(request.POST)
+        if form.is_valid():
+            attendee = form.save(commit=False)
+            attendee.event = event
+            if request.user.is_authenticated:
+                attendee.user = request.user
+            attendee.save()
+            messages.success(request, "Successfully registered for the event!")
+            return redirect(event.get_absolute_url())
+    else:
+        form = AttendeeForm()
+    return render(request, 'events/register.html', {'form': form, 'event': event})
+
+class EventCreateView(CreateView):
+    model = Event
+    form_class = EventForm
+    template_name = 'events/create.html'
+    success_url = reverse_lazy('event_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            messages.error(request, "You are not authorized to create events.")
+            return redirect('event_list')
+        return super().dispatch(request, *args, **kwargs)
+
+class EventUpdateView(UpdateView):
+    model = Event
+    form_class = EventForm
+    template_name = 'events/update.html'
+    success_url = reverse_lazy('index')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            messages.error(request, "You are not authorized to edit events.")
+            return redirect('index')
+        return super().dispatch(request, *args, **kwargs)
+    
+class EventDeleteView(DeleteView):
+    model = Event
+    template_name = 'events/delete.html'
+    success_url = reverse_lazy('index')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            messages.error(request, "You are not authorized to delete events.")
+            return redirect('index')
+        return super().dispatch(request, *args, **kwargs)
