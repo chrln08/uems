@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
-from django.views.decorators.cache import never_cache, cache_control
+from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login, logout, authenticate
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
