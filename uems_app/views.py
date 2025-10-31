@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
+from django.views.decorators.cache import never_cache, cache_control
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login, logout, authenticate
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -19,6 +20,7 @@ def dashboard(request):
         messages.error(request, "You are not logged in. Please log in first.")
         return redirect("login")
 
+@never_cache
 def login_view(request):
     if request.method == "POST":
         user = authenticate(username=request.POST["username"], password=request.POST["password"])
@@ -27,8 +29,9 @@ def login_view(request):
             return redirect("dashboard")
         else:
             messages.error(request, "Username or password is incorrect. Please try again.")
-    elif request.user.is_authenticated:
-        return redirect("dashboard")
+    else:
+        if request.user.is_authenticated:
+            return redirect("dashboard")
 
     form = LoginForm()
     return render(request, "auth/login.html", {"form": form})
@@ -162,12 +165,12 @@ class EventUpdateView(UpdateView):
     model = Event
     form_class = EventForm
     template_name = 'events/update.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('event_list')
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_staff:
             messages.error(request, "You are not authorized to edit events.")
-            return redirect('index')
+            return redirect('event_list')
         return super().dispatch(request, *args, **kwargs)
     
 class EventDeleteView(DeleteView):
